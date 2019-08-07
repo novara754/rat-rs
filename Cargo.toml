@@ -1,0 +1,11 @@
+[package]
+name = "rat"
+description = "A reimplementation of cat in Rust."
+version = "0.1.0"
+license = "MIT"
+authors = ["vzwGrey <vzwgrey@gmail.com>"]
+edition = "2018"
+publish = false
+
+[dependencies]
+structopt = "0.2"
