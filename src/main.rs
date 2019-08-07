@@ -39,6 +39,7 @@ struct Rat {
     t: bool,
 
     /// Use ^ and M- notation, except for LFD and TAB
+    /// (NOT YET SUPPORTED)
     #[structopt(short = "v", long = "show-nonprinting")]
     show_nonprinting: bool,
 
@@ -49,15 +50,56 @@ struct Rat {
 
 fn handle_file(fp: &PathBuf, opts: &Rat) -> Result<()> {
     let file = File::open(fp)?;
+    let mut lc = 1;
+    let mut last_empty = false;
     for line in BufReader::new(file).lines() {
-        println!("{}", line?);
+        let mut line = line?;
+
+        if opts.show_tabs {
+            line = line.replace("\t", "^I");
+        }
+
+        if opts.squeeze_blank && last_empty && line.is_empty() {
+            continue;
+        }
+
+        if opts.number || (opts.number_nonblank && !line.is_empty()) {
+            print!("{:6}\t", lc);
+            lc += 1;
+        }
+
+        print!("{}", line);
+
+        if opts.show_ends {
+            print!("$");
+        }
+
+        println!();
+
+        last_empty = line.is_empty();
     }
 
     Ok(())
 }
 
 fn main() {
-    let opts = Rat::from_args();
+    let mut opts = Rat::from_args();
+
+    if opts.show_all {
+        opts.show_nonprinting = true;
+        opts.show_ends = true;
+        opts.show_tabs = true;
+    }
+
+    if opts.e {
+        opts.show_nonprinting = true;
+        opts.show_ends = true;
+    }
+
+    if opts.t {
+        opts.show_nonprinting = true;
+        opts.show_tabs = true;
+    }
 
     for f in &opts.files {
         if let Err(e) = handle_file(f, &opts) {
