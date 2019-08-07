@@ -2,11 +2,11 @@
 
 A reimplementation of `cat` in Rust.
 
-# Why?
+# Motivation
 
 Just for fun, it's a simple program to implement as a learning project.
 
-# What can it do?
+# Features
 
 It can do (almost) anything the Unix/Linux version of `cat` can do.
 Currently it is lacking support for the `-v`/`--show-nonprinting` option as well
