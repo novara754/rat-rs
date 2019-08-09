@@ -1,6 +1,5 @@
 use std::fs::File;
-use std::io::{BufRead, BufReader, Result};
-use std::path::PathBuf;
+use std::io::{BufRead, BufReader, Lines, Result};
 use structopt::StructOpt;
 
 #[derive(StructOpt, Debug)]
@@ -43,16 +42,17 @@ struct Rat {
     #[structopt(short = "v", long = "show-nonprinting")]
     show_nonprinting: bool,
 
-    /// Files to process
-    #[structopt(name = "FILE", parse(from_os_str))]
-    files: Vec<PathBuf>,
+    /// Files to process. When file is "-" stdin is used, when empty stdin is also used.
+    #[structopt(name = "FILE")]
+    files: Vec<String>,
 }
 
-fn handle_file(fp: &PathBuf, opts: &Rat) -> Result<()> {
-    let file = File::open(fp)?;
+fn handle_lines<T>(lines: Lines<T>, opts: &Rat) -> Result<()>
+    where T: BufRead
+{
     let mut lc = 1;
     let mut last_empty = false;
-    for line in BufReader::new(file).lines() {
+    for line in lines {
         let mut line = line?;
 
         if opts.show_tabs {
@@ -82,6 +82,18 @@ fn handle_file(fp: &PathBuf, opts: &Rat) -> Result<()> {
     Ok(())
 }
 
+fn handle_file(fp: &String, opts: &Rat) -> Result<()> {
+    if fp != "-" {
+        let file = File::open(fp)?;
+        let lines = BufReader::new(file).lines();
+        handle_lines(lines, opts)
+    } else {
+        let stdin = std::io::stdin();
+        let lines = stdin.lock().lines();
+        handle_lines(lines, opts)
+    }
+}
+
 fn main() {
     let mut opts = Rat::from_args();
 
@@ -99,6 +111,10 @@ fn main() {
     if opts.t {
         opts.show_nonprinting = true;
         opts.show_tabs = true;
+    }
+
+    if opts.files.len() == 0 {
+        opts.files.push(String::from("-"));
     }
 
     for f in &opts.files {
