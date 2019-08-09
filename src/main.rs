@@ -119,8 +119,8 @@ fn main() {
 
     for f in &opts.files {
         if let Err(e) = handle_file(f, &opts) {
-            eprintln!("rat: {}", e);
-            break;
+            eprintln!("rat: [{}] {}", f, e);
+            std::process::exit(1);
         }
     }
 }
