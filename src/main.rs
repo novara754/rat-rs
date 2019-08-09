@@ -48,7 +48,8 @@ struct Rat {
 }
 
 fn handle_lines<T>(lines: Lines<T>, opts: &Rat) -> Result<()>
-    where T: BufRead
+where
+    T: BufRead,
 {
     let mut lc = 1;
     let mut last_empty = false;
@@ -82,7 +83,7 @@ fn handle_lines<T>(lines: Lines<T>, opts: &Rat) -> Result<()>
     Ok(())
 }
 
-fn handle_file(fp: &String, opts: &Rat) -> Result<()> {
+fn handle_file(fp: &str, opts: &Rat) -> Result<()> {
     if fp != "-" {
         let file = File::open(fp)?;
         let lines = BufReader::new(file).lines();
@@ -113,7 +114,7 @@ fn main() {
         opts.show_tabs = true;
     }
 
-    if opts.files.len() == 0 {
+    if opts.files.is_empty() {
         opts.files.push(String::from("-"));
     }
 
