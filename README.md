@@ -9,8 +9,7 @@ Just for fun, it's a simple program to implement as a learning project.
 # Features
 
 It can do (almost) anything the Unix/Linux version of `cat` can do.
-Currently it is lacking support for the `-v`/`--show-nonprinting` option as well
-as suport for reading from stdin.
+Currently lacking support for the `-v`/`--show-nonprinting` option.
 
 # Installation
 
