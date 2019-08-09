@@ -55,12 +55,12 @@ fn handle_lines<T>(lines: Lines<T>, opts: &Rat) -> Result<()>
     for line in lines {
         let mut line = line?;
 
-        if opts.show_tabs {
-            line = line.replace("\t", "^I");
-        }
-
         if opts.squeeze_blank && last_empty && line.is_empty() {
             continue;
+        }
+
+        if opts.show_tabs {
+            line = line.replace("\t", "^I");
         }
 
         if opts.number || (opts.number_nonblank && !line.is_empty()) {
