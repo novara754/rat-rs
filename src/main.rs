@@ -119,7 +119,7 @@ fn main() {
 
     for f in &opts.files {
         if let Err(e) = handle_file(f, &opts) {
-            println!("{}", e);
+            eprintln!("rat: {}", e);
             break;
         }
     }
