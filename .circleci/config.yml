@@ -1,0 +1,16 @@
+version: 2
+jobs:
+  build:
+    docker:
+      - image: circleci/rust:1.36.0-stretch
+
+    steps:
+      - checkout
+
+      - run:
+          name: Build Debug
+          command: cargo build
+
+      - run:
+          name: Build Release
+          command: cargo build --release
