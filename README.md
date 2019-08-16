@@ -1,3 +1,5 @@
+[![CircleCI](https://circleci.com/gh/vzwGrey/rat-rs/tree/master.svg?style=svg)](https://circleci.com/gh/vzwGrey/rat-rs/tree/master)
+
 # rat
 
 A reimplementation of `cat` in Rust.
